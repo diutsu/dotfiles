@@ -1,0 +1,40 @@
+alias mversion='mvn -o org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version'
+alias gh='ghopen origin'
+alias ghu='ghopen upstream'
+alias gpull='ghpull origin'
+
+function ghopen() {
+    giturl=$(git ls-remote --get-url $1)
+    if [ -z "$giturl" ]
+    then
+        echo "Not a git repository or no remote.origin.url set"
+        return 1
+    fi
+
+    giturl=${giturl/git\@github\.com\:/https://github.com/}
+    giturl=${giturl/\.git/}
+    branch="$(git symbolic-ref HEAD 2>/dev/null)" ||
+        branch="(unnamed branch)"     # detached HEAD
+    branch=${branch##refs/heads/}
+    giturl=$giturl/tree/$branch
+    echo $giturl
+    firefox $giturl
+}
+
+function ghpull() {
+    giturl=$(git ls-remote --get-url $1)
+    if [ -z "$giturl" ]
+    then
+        echo "Not a git repository or no remote.origin.url set"
+        return 1
+    fi
+
+    giturl=${giturl/git\@github\.com\:/https://github.com/}
+    giturl=${giturl/\.git/}
+    branch="$(git symbolic-ref HEAD 2>/dev/null)" ||
+        branch="(unnamed branch)"     # detached HEAD
+    branch=${branch##refs/heads/}
+    giturl=$giturl/pull/new/$branch
+    echo $giturl
+    firefox $giturl
+}
