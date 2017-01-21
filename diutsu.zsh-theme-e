@@ -1,30 +1,29 @@
 # vim:ft=zsh ts=2 sw=2 sts=2
-# Sunrise theme for oh-my-zsh
-# Intended to be used with Solarized: http://ethanschoonover.com/solarized
+# Diutsu theme for oh-my-zsh
+# Based on the Sunrised - heavily modified to my preference
 # (Needs Git plugin for current_branch method)
 
 # Color shortcuts
 R=$fg_no_bold[red]
+RB=$fg_bold[red]
 G=$fg_no_bold[green]
+GB=$fg_bold[green]
 M=$fg_no_bold[magenta]
+MB=$fg_bold[magenta]
 Y=$fg_no_bold[yellow]
-B=$fg_no_bold[blue]
+YB=$fg_bold[yellow]
+C=$fg_no_bold[blue]
+CB=$fg_bold[blue]
+K=$fg_no_bold[black]
+KB=$fg_bold[black]
+W=$fg_no_bold[white]
+WB=$fg_bold[white]
 RESET=$reset_color
 
-if [ "$(whoami)" = "root" ]; then
-    PROMPTCOLOR="%{$R%}" PREFIX="#! " CHAR="$";
-else
-    PROMPTCOLOR="" PREFIX="" CHAR=":";
-fi
 
 local return_code="%(?..%{$r%}%? ↵%{$reset%})"
 
 local user=`whoami`
-
-USER=""
-if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-  USER="%n@%m"
-fi
 
 
 # Get the status of the working tree (copied and modified from git.zsh)
@@ -75,15 +74,37 @@ function custom_git_prompt() {
   echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$(git_prompt_ahead)$(custom_git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
+if [ "$user" = "root" ]; then
+    PREFIX="%{$R%}#! " CHAR="$";
+    BTYQR="%B%(?.%{$RB%}>%{$MB%}>%{$CB%}> .%{$RB%}>>> )%b%{$RESET%}"
+else
+    PREFIX="" CHAR=":";
+    BTYQR="%B%(?.%{$R%}>%{$M%}>%{$C%}> .%{$R%}>>> )%b%{$RESET%}"
+fi
+USER='%{$Y%}'
+if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
+  USER="$USER%n"
+fi
+if [[  -n "$SSH_CLIENT" ]]; then
+  USER="$USER@%m"
+fi
+
+FOLDER='%{$C%}%4~ '
+#TIME="[%D{%d/%m %H:%M:%S}]"
+TIME=" %{$M%}%D{%H:%M} "
+GIT='$(custom_git_prompt) '
+#BTYQR='%B%(?.$CHAR.%{$R%}$CHAR)%b%{$RESET%}'
+#
+
 # %B sets bold text
-PROMPT='$PROMPTCOLOR$PREFIX%{$Y%}$USER%{$B%}[%D{%d/%m %H:%M:%S}]%{$RESET%}%4~$(custom_git_prompt)%{$B%}%B%(?.$CHAR.%{$R%}$CHAR%{$reset%})%b%{$RESET%}'
+PROMPT="$PREFIX$USER$TIME$FOLDER$GIT$BTYQR"
 RPS1="${return_code}"
 
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$Y%}["
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$Y%}]%{$RESET%}"
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$Y%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$RESET%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$R%}*"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$B%}➔"
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$C%}➔"
 ZSH_THEME_GIT_STATUS_PREFIX=""
 
 # Staged
@@ -96,4 +117,4 @@ ZSH_THEME_GIT_PROMPT_STAGED_DELETED="%{$G%}D"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$R%}?"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$R%}M"
 ZSH_THEME_GIT_PROMPT_DELETED="%{$R%}D"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$R%}UU"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$R%}U"
