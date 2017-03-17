@@ -1,7 +1,52 @@
+alias uskp="setxkbmap -layout us -variant altgr-intl"
+alias 1080p="xrandr --output VGA1 --mode 1920x1080  --output LVDS1 --off"
+alias poweroff="sudo shutdown now -hP"
+alias la="ls -lah --color"
+alias lf="ls -lh --color | egrep -v '^d'"
+alias lfa="ls -lha --color | egrep -v '^d'"
+alias ld="ls -lh --color | egrep '^d'"
+alias ldir="ls -lh --color | egrep '^d'"
+alias ldira="ls -lha --color | egrep '^d'"
+
+alias vzshrc="vim ~/.zshrc"
+alias venv="vim ~/.zsh_envs"
+alias valias="vim ~/.zsh_alias"
+alias valiass="vim ~/.zsh_alias_sensitive"
+alias vimrc="vim ~/.vimrc"
+alias vgit="vim ~/.gitconfig"
+alias vfzf="vim ~/.zsh_fzf"
+alias v="vim"
+alias vi='vim'
+#fast type utils
+alias am="alsamixer"
+#almost never used, but fun to have
+alias excuse='fortune bofh-excuses'
+alias ragequit='fortune -o'
+
+#view images on a folder from the console
+alias fehF='feh -ZYFzx --cycle-once -D 3 *'
+alias fehr='feh -ZYzx -g 600x400--cycle-once -D 3 *'
+alias open_command='xdg-open'
+alias open='xdg-open'
+alias blackfuse='ssh blackfuse.tecnico.ulisboa.pt'
+alias smeg='ssh smeg.tecnico.ulisboa.pt'
 alias mversion='mvn -o org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version'
+
 alias gh='ghopen origin'
 alias ghu='ghopen upstream'
 alias gpull='ghpull origin'
+
+
+
+alias vdc="vim docker-compose"
+alias dck="docker-compose"
+
+function rt(){
+    firefox -new-window "https://rt.ist.utl.pt/ciist/Ticket/Display.html?id=$1"
+}
+function jira(){
+    firefox -new-window "https://jira.fenixedu.org/secure/QuickSearch.jspa?searchString=$1"
+}
 
 function ghopen() {
     giturl=$(git ls-remote --get-url $1)

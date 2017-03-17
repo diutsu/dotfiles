@@ -27,32 +27,6 @@ ZSH_THEME="diutsu"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias uskp="setxkbmap -layout us -variant altgr-intl"
-alias 1080p="xrandr --output VGA1 --mode 1920x1080  --output LVDS1 --off"
-alias poweroff="sudo shutdown now -hP"
-alias la="ls -lah --color"
-alias lf="ls -lh --color | egrep -v '^d'"
-alias lfa="ls -lha --color | egrep -v '^d'"
-alias ld="ls -lh --color | egrep '^d'"
-alias ldir="ls -lh --color | egrep '^d'"
-alias ldira="ls -lha --color | egrep '^d'"
-
-alias vzshrc="vim ~/.zshrc"
-alias venv="vim ~/.zsh_envs"
-alias valias="vim ~/.zsh_alias"
-alias valiass="vim ~/.zsh_alias_sensitive"
-alias vimrc="vim ~/.vimrc"
-alias v="vim"
-alias vi='vim'
-#fast type utils
-alias am="alsamixer"
-#almost never used, but fun to have
-alias excuse='fortune bofh-excuses'
-alias ragequit='fortune -o'
-
-#view images on a folder from the console
-alias fehF='feh -ZYFzx --cycle-once -D 3 *'
-alias fehr='feh -ZYzx -g 600x400--cycle-once -D 3 *'
 
 dataInfo() {
     R -q -e "x <- read.csv('$*', sep='\t', header = F); summary(x); apply(x, MARGIN = 2, FUN = sd)"
@@ -63,6 +37,7 @@ dataInfo() {
 source ~/.zsh_alias
 source ~/.zsh_alias_sensitive
 source ~/.zsh_envs
+source ~/.zsh_fzf
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -93,7 +68,8 @@ source ~/.zsh_envs
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # HIST_STAMPS="mm/dd/yyyy"
-
+HIST_FIND_NO_DUPS="true"
+HIST_IGNORE_DUPS="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
@@ -125,3 +101,5 @@ source $ZSH/oh-my-zsh.sh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+FZF_CTRL_R_OPTS='--exact'
