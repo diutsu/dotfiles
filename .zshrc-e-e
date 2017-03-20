@@ -103,3 +103,5 @@ source $ZSH/oh-my-zsh.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 FZF_CTRL_R_OPTS='--exact'
+FZF_DEFAULT_OPTS='--height 40% --border'
+. /usr/lib/z.sh
