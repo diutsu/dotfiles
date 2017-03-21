@@ -15,7 +15,6 @@ alias valiass="vim ~/.zsh_alias_sensitive"
 alias vimrc="vim ~/.vimrc"
 alias vgit="vim ~/.gitconfig"
 alias vfzf="vim ~/.zsh_fzf"
-alias v="vim"
 alias vi='vim'
 #fast type utils
 alias am="alsamixer"
