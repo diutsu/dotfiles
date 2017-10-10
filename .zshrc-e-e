@@ -1,7 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/diutsu/.local/bin:/home/diutsu/bin:/opt/cuda/bin"
+export PATH="/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:/usr/local/games:/usr/games:/home/diutsu/.local/bin:/home/diutsu/bin:/opt/cuda/bin"
 export EDITOR="vim"
 export DEFAULT_USER="diutsu"
 export PROGRAMS="/home/$DEFAULT_USER/programs"
@@ -102,6 +102,13 @@ source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Move next only if `homebrew` is installed
+if command -v brew >/dev/null 2>&1; then
+	# Load rupa's z if installed
+	[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
+fi
+
 FZF_CTRL_R_OPTS='--exact'
 FZF_DEFAULT_OPTS='--height 40% --border'
-. /usr/lib/z.sh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
