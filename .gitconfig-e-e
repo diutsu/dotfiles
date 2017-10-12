@@ -7,43 +7,43 @@
     autocrlf = input
 
 [alias]
-    ch = checkout
-    nb = checkout -b
-    st = status
-    rt = reset
-    lsd = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    find = !git ls-tree -r --name-only HEAD | grep --color $1
-    lg = log --color=always -p
-    dff = diff --color=auto
-    yolo = !git add -A && git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
-    copycat = commit -C
-    lost = stash
-    found = stash pop
-    overit = stash clear
-    in = add
-    out = rm
-    wasted = reset HEAD
-    fuckedup = reset --hard
-    with = merge
-    real = rebase
-    this = checkout
-    that = checkout -
-    meow = status
-    wtf = status
-    what = diff
-    huh = diff --cached
-    bah = blame
-    unstage = reset -q HEAD --
-    discard = checkout --
-    uncommit = reset --mixed HEAD~
-    amend = commit --amend
-    branches = branch -a
-    tags = tag
-    stashes = stash list
-    remotes = remote -v
-    diffc = diff --cached --diff-algorithm=minimal -w
-    graph = log --graph -10 --branches --remotes --tags  --format=format:'%Cgreen%h %Creset• %<(75,trunc)%s (%cN, %cr) %Cred%d' --date-order
 	eh = config --get-regexp ^alias\\.
+    amend = commit --amend
+    bah = blame
+    branches = branch -a
+    ch = checkout
+    copycat = commit -C
+    dff = diff --color=auto
+    diffc = diff --cached --diff-algorithm=minimal -w
+    discard = checkout --
+    find = !git ls-tree -r --name-only HEAD | grep --color $1
+    found = stash pop
+    fuckedup = reset --hard
+    graph = log --graph -10 --branches --remotes --tags  --format=format:'%Cgreen%h %Creset• %<(75,trunc)%s (%cN, %cr) %Cred%d' --date-order
+    huh = diff --cached
+    in = add
+    lg = log --color=always -p
+    lost = stash
+    lsd = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    meow = status
+    nb = checkout -b
+    out = rm
+    overit = stash clear
+    real = rebase
+    remotes = remote -v
+    rt = reset
+    st = status
+    stashes = stash list
+    tags = tag
+    that = checkout -
+    this = checkout
+    uncommit = reset --mixed HEAD~
+    unstage = reset -q HEAD --
+    wasted = reset HEAD
+    what = diff
+    with = merge
+    wtf = status
+    yolo = !git add -A && git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
 
 [apply]
     whitespace = nowarn
