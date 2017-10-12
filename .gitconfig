@@ -60,3 +60,9 @@
     default = matching
 [help]
     autocorrect = 1
+[difftool "sourcetree"]
+	cmd = meld $LOCAL $BASE
+	path = 
+[mergetool "sourcetree"]
+	cmd = meld $LOCAL $MERGED $REMOTE
+	trustExitCode = true

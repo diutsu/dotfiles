@@ -2,3 +2,4 @@
 .zsh_alias_sensitive
 .vim/plugged
 .zsh_envs
+.DS_Store
