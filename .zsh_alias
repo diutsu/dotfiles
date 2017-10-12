@@ -32,6 +32,15 @@ alias blackfuse='ssh blackfuse.tecnico.ulisboa.pt'
 alias smeg='ssh smeg.tecnico.ulisboa.pt'
 alias mversion='mvn -o org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version'
 
+alias mvt="mvn tomcat7:run"
+alias mct="mvn clean tomcat7:run"
+alias mvdt="mvnDebug tomcat7:run"
+alias mcdt="mvnDebug clean tomcat7:run"
+alias mci="mvn clean install"
+alias mcis="mvn clean install -Dmaven.test.skip=true"
+alias mvis="mvn install -Dmaven.test.skip=true"
+alias mvi="mvn install"
+
 alias gh='ghopen origin'
 alias ghu='ghopen upstream'
 alias gpull='ghpull origin'

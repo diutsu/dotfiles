@@ -1,14 +1,12 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:/usr/local/games:/usr/games:/home/diutsu/.local/bin:/home/diutsu/bin:/opt/cuda/bin"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$HOME/.local/bin:$HOME/bin:/opt/cuda/bin"
 export EDITOR="vim"
-export DEFAULT_USER="diutsu"
-export PROGRAMS="/home/$DEFAULT_USER/programs"
-export WORKSPACE="/home/$DEFAULT_USER/workspace"
-export SCRIPTS="/home/$DEFAULT_USER/scripts"
-export CSRGRAPHS="/home/diutsu/workspace/thesis/graphs-csr/"
-export GRAPHS="/home/diutsu/workspace/thesis/graphs/"
+export WORKSPACE="$HOME/workspace"
+export DOTFILES="$HOME/.dotfiles"
+export CSRGRAPHS="$HOME/workspace/thesis/graphs-csr/"
+export GRAPHS="$HOME/workspace/thesis/graphs/"
 #export JAVA_HOME="$PROGRAMS/jdk1.8.0_20"
 export JAVA_OPTS="-server -da -dsa -Xms1g -Xmx4g -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:ParallelGCThreads=2"
 
@@ -32,8 +30,8 @@ dataInfo() {
     R -q -e "x <- read.csv('$*', sep='\t', header = F); summary(x); apply(x, MARGIN = 2, FUN = sd)"
 }
 
-#alias eclipse='screen -S eclipse /home/diutsu/progs/eclipse/eclipse'
-#alias eclipse-php='screen -S eclipse /home/diutsu/progs/eclipse-php/eclipse'
+#alias eclipse='screen -S eclipse $HOME/progs/eclipse/eclipse'
+#alias eclipse-php='screen -S eclipse $HOME/progs/eclipse-php/eclipse'
 source ~/.zsh_alias
 source ~/.zsh_alias_sensitive
 source ~/.zsh_envs
@@ -68,6 +66,7 @@ source ~/.zsh_fzf
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # HIST_STAMPS="mm/dd/yyyy"
+hist_ignore_dups="true"
 HIST_FIND_NO_DUPS="true"
 HIST_IGNORE_DUPS="true"
 # Would you like to use another custom folder than $ZSH/custom?
@@ -76,7 +75,7 @@ HIST_IGNORE_DUPS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git sudo zsh-syntax-highlighting jira mvn )
+plugins=(git sudo jira mvn zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -112,3 +111,4 @@ FZF_CTRL_R_OPTS='--exact'
 FZF_DEFAULT_OPTS='--height 40% --border'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+. /usr/lib/z.sh

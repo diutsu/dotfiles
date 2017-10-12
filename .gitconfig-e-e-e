@@ -1,12 +1,13 @@
 [user]
-    email = goncalo.sousa@tecnico.ulisboa.pt
-    name = diutsu
+	email = goncalo.sousa@tecnico.ulisboa.pt
+	name = Gonçalo Sousa
 
 [core]
     editor = vim
     autocrlf = input
 
 [alias]
+	alias = config --get-regexp ^alias\\.
 	eh = config --get-regexp ^alias\\.
     amend = commit --amend
     bah = blame
@@ -29,6 +30,10 @@
     nb = checkout -b
     out = rm
     overit = stash clear
+    pullup = pull upstream
+    pullorg = pull origin
+    pushup = push upstream
+    pushorg = push origin
     real = rebase
     remotes = remote -v
     rt = reset

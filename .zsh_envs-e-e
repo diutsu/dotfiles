@@ -1,0 +1,36 @@
+export cms=$HOME/workspace/cms/fenixedu-cms
+alias cms=$cms
+export lrn=$HOME/workspace/fenixedu-learning
+alias lrn=$lrn
+export wapp=$HOME/workspace/ist/fenix-webapp
+alias wapp=$wapp
+export fist=$HOME/workspace/ist/fenixedu-ist
+alias fist=$fist
+export acdm=$HOME/workspace/fenixedu-academic
+alias acdm=$acdm
+export ths=$HOME/workspace/fenixedu-academic-thesis
+alias ths=$ths
+export spcs=$HOME/workspace/fenixedu-spaces
+alias spcs=$spcs
+export bennu=$HOME/workspace/bennu/bennu
+alias bennu=$bennu
+export drv=$HOME/workspace/drive/
+alias drv=$drv
+export dwld=$HOME/Downloads
+alias dwld=$dwld
+
+
+export JIRA_URL=http://jira.fenixedu.org
+
+export OS_AUTH_URL=https://stackcontroller.tp.dsi.tecnico.ulisboa.pt:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+
+export OS_PROJECT_DOMAIN_NAME=tecnico-saml
+export OS_USER_DOMAIN_NAME=tecnico-apikeys
+export OS_REGION_NAME=RegionT
+
+export OS_PROJECT_NAME=p-drive-test
+export OS_PROJECT_ID=750a1d21bd5b4c658865c0be13e7afdd
+export OS_USERNAME=username
+export OS_PASSWORD=password
