@@ -1,4 +1,5 @@
 .zsh-update
 .zsh_alias_sensitive
 .vim/plugged
+.vim/bundle
 .DS_Store

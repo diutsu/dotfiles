@@ -1,34 +1,56 @@
-" Use pathogen to easily modify the runtime path to include all
-" plugins under the ~/.vim/bundle directory
-
-set laststatus=2
-set t_Co=256
-set nocompatible
+set nocompatible              " be iMproved, required
 filetype off                  " required
 
-call plug#begin()
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
-Plug 'L9'
-Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
-Plug 'Raimondi/delimitMate'
-Plug 'ghewgill/vim-scmdiff'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/syntastic'
-Plug 'tpope/vim-surround'
-Plug 'tomasr/molokai'
-Plug 'altercation/vim-colors-solarized'
-Plug 'chriskempson/base16-vim'
-Plug 'dsolstad/vim-wombat256i'
-Plug 'fatih/vim-go'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 
-call plug#end()
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+Plugin 'tpope/vim-fugitive'
+
+" plugin from http://vim-scripts.org/vim/scripts.html
+" Plugin 'L9'
+" Git plugin not hosted on GitHub
+Plugin 'git://git.wincent.com/command-t.git'
+
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Raimondi/delimitMate'
+Plugin 'ghewgill/vim-scmdiff'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'scrooloose/syntastic'
+Plugin 'tpope/vim-surround'
+Plugin 'tomasr/molokai'
+"Plugin 'altercation/vim-colors-solarized'
+"Plugin 'chriskempson/base16-vim'
+"Plugin 'dsolstad/vim-wombat256i'
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
 filetype plugin indent on    " required
-set mouse=a
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
 
 " INDENT STUFF
 set autoindent
@@ -46,7 +68,7 @@ set showmatch
 " highly obnoxius visual bell
 set vb
 
-" SEARCHES 
+" SEARCHES
 set ignorecase
 set smartcase
 set incsearch
@@ -55,7 +77,7 @@ set showmatch
 set gdefault " lazyness to type the g in s/foo/bar/g
 set laststatus=2
 "done with highligh, move on"
-nnoremap <leader><space> :noh<cr> 
+nnoremap <leader><space> :noh<cr>
 
 " Scroll ahead
 set scrolloff=4
@@ -70,7 +92,7 @@ set formatoptions=qrn1
     "set colorcolumn=80
 "endif
 
-" EXTRA COOL STUFF 
+" EXTRA COOL STUFF
 set showtabline=2 " always show tab bar
 set cul "hightlight current line"
 set wildmenu  "autocomplete menu"
@@ -123,7 +145,7 @@ let g:rehash256 = 1
 
 " Vim-airline
 let g:airline_theme = "powerlineish"
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 let g:airline_mode_map = {
      \ 'n'  : 'NORMAL',
      \ 'i'  : 'INSERT',
@@ -165,4 +187,4 @@ let @-='i-SNAPSHOT'
 " some auto expand text
 ab imavc int main(int argc, char**argv) {<CR><CR>return 0;<CR>}<UP><TAB>
 ab psvm public static void main(String[] args) {<CR><CR>}<UP><TAB>
-ab javanewf /**<CR> *<CR>*/<CR><BACKSPACE>{<CR><CR>}<UP><UP><UP><UP><RIGHT>																		
+ab javanewf /**<CR> *<CR>*/<CR><BACKSPACE>{<CR><CR>}<UP><UP><UP><UP><RIGHT>

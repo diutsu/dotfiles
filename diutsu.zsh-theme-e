@@ -81,12 +81,12 @@ else
     PREFIX="" CHAR=":";
     BTYQR="%B%(?.%{$R%}>%{$M%}>%{$C%}> .%{$R%}>>> )%b%{$RESET%}"
 fi
-USER='%{$Y%}'
+T_USER='%{$Y%}'
 if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-  USER="$USER%n"
+  T_USER="$T_USER%n"
 fi
 if [[  -n "$SSH_CLIENT" ]]; then
-  USER="$USER@%m"
+  T_USER="$T_USER@%m"
 fi
 
 FOLDER='%{$C%}%4~ '
@@ -97,7 +97,7 @@ GIT='$(custom_git_prompt) '
 #
 
 # %B sets bold text
-PROMPT="$PREFIX$USER$TIME$FOLDER$GIT$BTYQR"
+PROMPT="$PREFIX$T_USER$TIME$FOLDER$GIT$BTYQR"
 RPS1="${return_code}"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$Y%}"

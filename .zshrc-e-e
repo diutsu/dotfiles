@@ -5,13 +5,11 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$HOME/.loc
 export EDITOR="vim"
 export WORKSPACE="$HOME/workspace"
 export DOTFILES="$HOME/.dotfiles"
-export CSRGRAPHS="$HOME/workspace/thesis/graphs-csr/"
-export GRAPHS="$HOME/workspace/thesis/graphs/"
 #export JAVA_HOME="$PROGRAMS/jdk1.8.0_20"
-export JAVA_OPTS="-server -da -dsa -Xms1g -Xmx4g -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:ParallelGCThreads=2"
+#export JAVA_OPTS="-server -da -dsa -Xms1g -Xmx4g -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:ParallelGCThreads=2"
 
 #export M2_HOME="$PROGRAMS/apache-maven-3.2.5"
-export MAVEN_OPTS="$JAVA_OPTS -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dmaven.compiler.useIncrementalCompilation=false"
+#export MAVEN_OPTS="$JAVA_OPTS -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dmaven.compiler.useIncrementalCompilation=false"
 export JPDA_TRANSPORT="dt_socket"
 export JPDA_ADDRESS="8000"
 export PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin:$CATALINA_HOME/bin
@@ -19,6 +17,7 @@ export PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin:$CATALINA_HOME/bin
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
+export DEFAULT_USER="diutsu"
 ZSH_THEME="diutsu"
 
 
@@ -100,6 +99,8 @@ source $ZSH/oh-my-zsh.sh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#[ -f /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh
+#[ -f /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh
 
 # Move next only if `homebrew` is installed
 if command -v brew >/dev/null 2>&1; then
@@ -109,6 +110,7 @@ fi
 
 FZF_CTRL_R_OPTS='--exact'
 FZF_DEFAULT_OPTS='--height 40% --border'
+FZF_CTRL_T_OPTS="--preview '(cat {})'"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-. /usr/lib/z.sh
+. ${HOME}/.z.sh

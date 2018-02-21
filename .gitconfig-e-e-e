@@ -1,5 +1,5 @@
 [user]
-	email = goncalo.sousa@tecnico.ulisboa.pt
+    email = diutsu@email.com
 	name = Gonçalo Sousa
 
 [core]
@@ -7,41 +7,96 @@
     autocrlf = input
 
 [alias]
-	alias = config --get-regexp ^alias\\.
-	eh = config --get-regexp ^alias\\.
-    amend = commit --amend
+    ai = add --interactive
+    alias = config --get-regexp ^alias\\.
+    amend = commit --amend --no-edit
+    assume = update-index --assume-unchanged
+    assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+    assumed = "!git ls-files -v | grep ^h | cut -c 3-"
     bah = blame
+    br = branch
+    bra = branch -ra
+    branch = branch -ra
     branches = branch -a
+    rw = commit --amend
+    caa = commit -a --amend -C HEAD
     ch = checkout
+    ci = commit
+    cl = clone
+    cm = commit -m
+    cma = commit -a -m
+    co = checkout
     copycat = commit -C
+    cp = cherry-pick
+    d = diff --word-diff
+    dc = diff --cached
     dff = diff --color=auto
+    diff = diff --word-diff
     diffc = diff --cached --diff-algorithm=minimal -w
+    diffr  = "!f() { git diff "$1"^.."$1"; }; f"
     discard = checkout --
+    dlc = diff --cached HEAD^
+    done = "!f() { git branch | grep "$1" | cut -c 3- | grep -v done | xargs -I{} git branch -m {} done-{}; }; f"  ra = "!f() { git remote add $1 https://bitbucket.org/$2.git; }; f"
+    dr  = "!f() { git diff -w "$1"^.."$1"; }; f"
+    eh = config --get-regexp ^alias\\.
+    empty = "!git commit -am\"[empty] Initial commit\" --allow-empty"
+    f = "!git ls-files | grep -i"
+    filelog = log -u
     find = !git ls-tree -r --name-only HEAD | grep --color $1
+    fl = log -u
     found = stash pop
     fuckedup = reset --hard
+    gr = grep -Ii
+    gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
     graph = log --graph -10 --branches --remotes --tags  --format=format:'%Cgreen%h %Creset• %<(75,trunc)%s (%cN, %cr) %Cred%d' --date-order
+    grep = grep -Ii
     huh = diff --cached
     in = add
+    la = "!git config -l | grep alias | cut -c 7-"
+    lap = "!f() { git --git-dir=$1 format-patch -k -1 --stdout $2 | git am -3 -k; }; f"
+    last = "!gvim $(git show HEAD --format="" --name-only | xargs)"
+    lasttag = describe --tags --abbrev=0
+    lc  = "!f() { git ll "$1"^.."$1"; }; f"
     lg = log --color=always -p
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
     lost = stash
+    ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
     lsd = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    lt = describe --tags --abbrev=0
     meow = status
     nb = checkout -b
+    ours = "!f() { git co --ours $@ && git add $@; }; f"
     out = rm
     overit = stash clear
-    pullup = pull upstream
-    pullorg = pull origin
-    pushup = push upstream
+    po = pull origin
+    pu = pull upstream
     pushorg = push origin
+    pushup = push upstream
+    r = reset
+    r1 = reset HEAD^
+    r2 = reset HEAD^^
     real = rebase
+    rem="!git config -l | grep remote.*url | tail -n +2"
     remotes = remote -v
+    rh = reset --hard
+    rh1 = reset HEAD^ --hard
+    rh2 = reset HEAD^^ --hard
     rt = reset
+    sa = stash apply
+    sba = "!f() { git subtree add --prefix $2 $1 master --squash; }; f"
+    sbu = "!f() { git subtree pull --prefix $2 $1 master --squash; }; f"
+    sl = stash list
+    ss = stash save
     st = status
+    sts = status -s
     stashes = stash list
     tags = tag
     that = checkout -
+    theirs = "!f() { git co --theirs $@ && git add $@; }; f"
     this = checkout
+    unassume = update-index --no-assume-unchanged
+    unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
     uncommit = reset --mixed HEAD~
     unstage = reset -q HEAD --
     wasted = reset HEAD
