@@ -1,6 +1,7 @@
 [user]
-    email = diutsu@email.com
+	email = goncalo.sousa@breuninger.de
 	name = Gonçalo Sousa
+	signingkey = 4FFC08567D29EC7D
 
 [core]
     editor = vim
@@ -8,10 +9,11 @@
 
 [alias]
     ai = add --interactive
+    abort = "!git checkout -- && git checkout master && git pull && git reset --hard origin/master"
     alias = config --get-regexp ^alias\\.
     amend = commit --amend --no-edit
-    assume = update-index --assume-unchanged
-    assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+    #assume = update-index --assume-unchanged
+    #assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
     assumed = "!git ls-files -v | grep ^h | cut -c 3-"
     bah = blame
     br = branch
@@ -21,12 +23,14 @@
     rw = commit --amend
     caa = commit -a --amend -C HEAD
     ch = checkout
+    chb = checkout -
+    chm = checkout master
     ci = commit
     cl = clone
     cm = commit -m
     cma = commit -a -m
     co = checkout
-    copycat = commit -C
+    copycat = commit --reset-author -C
     cp = cherry-pick
     d = diff --word-diff
     dc = diff --cached
@@ -41,6 +45,7 @@
     eh = config --get-regexp ^alias\\.
     empty = "!git commit -am\"[empty] Initial commit\" --allow-empty"
     f = "!git ls-files | grep -i"
+    ff = merge --ff-only
     filelog = log -u
     find = !git ls-tree -r --name-only HEAD | grep --color $1
     fl = log -u
@@ -62,7 +67,9 @@
     lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
     lost = stash
     ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
-    lsd = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    lsd = log --graph --pretty=format:'%Cred%h%Creset - %C(yellow)[%ar]%Creset %s %C(bold blue)<%an>%Cgreen%d%Creset'  --abbrev-commit --date=relative;
+    lsa = !git ls --all
+    lsda = !git lsd --all
     lt = describe --tags --abbrev=0
     meow = status
     nb = checkout -b
@@ -72,11 +79,13 @@
     po = pull origin
     pu = pull upstream
     pushorg = push origin
+    pushnb = push -u origin HEAD
     pushup = push upstream
     r = reset
     r1 = reset HEAD^
     r2 = reset HEAD^^
     real = rebase
+    rib = rebase -i master
     rem="!git config -l | grep remote.*url | tail -n +2"
     remotes = remote -v
     rh = reset --hard
@@ -103,6 +112,7 @@
     what = diff
     with = merge
     wtf = status
+    wtc = !git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
     yolo = !git add -A && git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
 
 [apply]
@@ -117,7 +127,7 @@
 [diff]
     algorithm = patience
 [push]
-    default = matching
+	default = simple
 [help]
     autocorrect = 1
 [difftool "sourcetree"]
@@ -126,3 +136,5 @@
 [mergetool "sourcetree"]
 	cmd = meld $LOCAL $MERGED $REMOTE
 	trustExitCode = true
+[gpg]
+	program = gpg

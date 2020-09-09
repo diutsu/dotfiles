@@ -12,7 +12,7 @@ fkill() {
 #fshow - git commit browser
 fshow() {
   git log --all --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr %C(bold blue)<%an>" "$@" |
   fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
       --bind "ctrl-m:execute:
                 (grep -o '[a-f0-9]\{7\}' | head -1 |

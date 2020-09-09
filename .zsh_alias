@@ -2,13 +2,23 @@ alias a="alias | grep"
 #alias uskp="setxkbmap -layout us -variant altgr-intl"
 #alias 1080p="xrandr --output VGA1 --mode 1920x1080  --output LVDS1 --off"
 #alias poweroff="sudo shutdown now -hP"
+#alias java8="export JAVA_HOME=`/usr/libexec/java_home -v 1.8`"
+#alias java10="export JAVA_HOME=`/usr/libexec/java_home -v 10`"
+#java8
+
 alias la="ls -lah --color"
 alias lf="ls -lh --color | egrep -v '^d'"
 alias lfa="ls -lha --color | egrep -v '^d'"
 alias ld="ls -lh --color | egrep '^d'"
 alias ldir="ls -lh --color | egrep '^d'"
 alias ldira="ls -lha --color | egrep '^d'"
-
+enc64() {
+    echo $1 | base64; echo
+}
+dec64() {
+    echo $1 | base64 -D; echo
+}
+alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
 alias vzshrc="vim ~/.zshrc"
 alias venv="vim ~/.zsh_envs"
 alias valias="vim ~/.zsh_alias"
@@ -29,15 +39,74 @@ alias ragequit='fortune -o'
 #alias open_command='xdg-open'
 #alias open='xdg-open'
 
+export TEAM=zahl
+alias stage-dev="export CERT_DIR=$HOME/aiven/dev && export STAGE=dev && export BREUNI_USER=gsousa"
+alias stage-prod="export CERT_DIR=$HOME/aiven/prod && export STAGE=prod && export BREUNI_USER=gsousa"
+
+alias prfn="export TEAM=prfn"
+alias zahl="export TEAM=zahl"
+
+alias kube="kubectl --namespace=$KUBE_NAMESPACE"
+alias kubeg="kubectl get"
+alias kubepods="kubectl get pods"
+alias kubedeployments="kubectl get deployments"
+alias kubelog="kubectl logs"
+alias kubedesc="kubectl describe"
+
+
 #kafka
 alias kfl="kafkacat -L -b localhost:9092"
-alias kflt="kafkacat -L -b localhost:9092 | grep 'topic ' --color=never" | sort
+alias kflt="kafkacat -L -b localhost:9092 | grep 'topic ' --color=never | sort "
 alias kfc="kafkacat -C -b localhost:9092"
 alias kfp="kafkacat -P -b localhost:9092"
 alias krst="kafka-consumer-groups --bootstrap-server localhost:9092 --reset-offsets --to-earliest --all-topics --execute --group"
 
+kfc-a() {
+    kafkacat -b "kafka-$STAGE-prfn.aivencloud.com:18162" -X security.protocol=ssl  -X ssl.ca.location="$CERT_DIR/ca.pem"  -X ssl.certificate.location="$CERT_DIR/service.cert" -X ssl.key.location="$CERT_DIR/service.key" -C -t $TOPIC -e
+}
+
+kafka-cp() {
+    kafkacat -b "kafka-$STAGE-prfn.aivencloud.com:18162" -X security.protocol=ssl  -X ssl.ca.location="$CERT_DIR/ca.pem"  -X ssl.certificate.location="$CERT_DIR/service.cert" -X ssl.key.location="$CERT_DIR/service.key" -C -t $TOPIC -e -D "\t" | kafkacat -P -b "localhost:9092" -t $TOPIC -D "\t"
+}
+
+kafka-aiven() {
+    if [ -z $CERT_DIR ]; then
+        >&2 echo 'Please set your certificate directory as $CERT_DIR\n'
+        return -1
+    fi
+    if [ -z $STAGE ]; then
+        >&2 echo 'Please set your current environment (dev/prod) as $STAGE\n'
+        return -1
+    fi
+    kafkacat -b "kafka-$STAGE-prfn.aivencloud.com:18162" -X security.protocol=ssl  -X ssl.ca.location="$CERT_DIR/ca.pem"  -X ssl.certificate.location="$CERT_DIR/service.cert" -X ssl.key.location="$CERT_DIR/service.key" "$@"
+}
+
+aws-session(){
+    $(aws_get_session $STAGE ${TEAM}_developer)
+}
+
+aws-ecr() {
+    $(aws ecr get-login --no-include-email --profile breuninger-dev)
+}
+
+vault-auth = function() {
+    if [ -z $STAGE ]; then
+        echo 'Please set your current environment (dev/prod) as $STAGE\n'
+        return -1
+    fi
+
+    if [ -z $BREUNI_USER ]; then
+        echo 'Please set your username as $BREUNI_USER\n'
+        return -1
+    fi
+
+     export VAULT_ADDR="https://vault.$STAGE.breuni.de"  
+     vault login -method=ldap username=$BREUNI_USER
+}
+
+
 #docker test
-alias dtb='docker-compose -f integration-test/testbed.yaml -f integration-test/testbed-expose.yaml up'
+alias dtb='docker-compose -f integration-test/testbed.yaml -f integration-test/testbed-expose.yaml'
 
 #maven
 alias mversion='mvn -o org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version'
@@ -55,12 +124,12 @@ alias ghu='ghopen upstream'
 alias gpull='ghpull origin'
 
 alias diff="colordiff"
-alias jsv="pbpaste | jq"
+alias jsv="pbpaste | jq | less"
+alias jsvp="pbpaste | jq"
 
 alias vdc="vim docker-compose"
 alias dck="docker-compose"
 
-alias helm="helm --tiller-namespace prfn"
 
 
 #function rt(){
@@ -74,7 +143,7 @@ function ghopen() {
     giturl=$(git ls-remote --get-url $1)
     if [ -z "$giturl" ]
     then
-        echo "Not a git repository or no remote.origin.url set"
+        >&2 echo "Not a git repository or no remote.origin.url set"
         return 1
     fi
 
@@ -105,3 +174,4 @@ function ghpull() {
     echo $giturl
     firefox $giturl
 }
+

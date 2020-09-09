@@ -1,23 +1,37 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$HOME/.local/bin:$HOME/bin:/opt/cuda/bin"
+export PATH="$PATH:/usr/local/bin:/usr/bin:/bin"
+export PATH="$PATH:/usr/sbin:/sbin"
+export PATH="$PATH:/usr/local/games:/usr/games:$HOME/.local/bin:$HOME/bin"
+
 export EDITOR="vim"
 export WORKSPACE="$HOME/workspace"
 export DOTFILES="$HOME/.dotfiles"
+#export CSRGRAPHS="$HOME/workspace/thesis/graphs-csr/"
+#export GRAPHS="$HOME/workspace/thesis/graphs/"
 #export JAVA_HOME="$PROGRAMS/jdk1.8.0_20"
 #export JAVA_OPTS="-server -da -dsa -Xms1g -Xmx4g -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:ParallelGCThreads=2"
 
 #export M2_HOME="$PROGRAMS/apache-maven-3.2.5"
 #export MAVEN_OPTS="$JAVA_OPTS -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dmaven.compiler.useIncrementalCompilation=false"
-export JPDA_TRANSPORT="dt_socket"
-export JPDA_ADDRESS="8000"
-export PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin:$CATALINA_HOME/bin
+#export JPDA_TRANSPORT="dt_socket"
+#export JPDA_ADDRESS="8000"
+#qexport PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin
+
+export PATH=$PATH:$HOME/aws/scripts
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="$HOME/.jenv/bin:$PATH"
+
+export AWS_SESSION_SURATION="36000"
+eval "$(jenv init -)"
+
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-export DEFAULT_USER="diutsu"
+export DEFAULT_USER="gsousa"
 ZSH_THEME="diutsu"
 
 
@@ -33,8 +47,8 @@ dataInfo() {
 #alias eclipse-php='screen -S eclipse $HOME/progs/eclipse-php/eclipse'
 source ~/.zsh_alias
 source ~/.zsh_alias_sensitive
-source ~/.zsh_envs
 source ~/.zsh_fzf
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -74,11 +88,22 @@ HIST_IGNORE_DUPS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git sudo jira mvn zsh-syntax-highlighting)
+plugins=(docker
+git
+mvn
+jira
+zsh-syntax-highlighting
+zsh-autosuggestions
+kubectl)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+
+bindkey "[D" backward-word
+bindkey "[C" forward-word
+bindkey "^[a" beginning-of-line
+bindkey "^[e" end-of-line
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -98,15 +123,17 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
+eval $(thefuck --alias)
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #[ -f /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh
 #[ -f /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh
 
 # Move next only if `homebrew` is installed
-if command -v brew >/dev/null 2>&1; then
+#if command -v brew >/dev/null 2>&1; then
 	# Load rupa's z if installed
-	[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
-fi
+	#[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
+#fi
 
 FZF_CTRL_R_OPTS='--exact'
 FZF_DEFAULT_OPTS='--height 40% --border'
@@ -114,3 +141,11 @@ FZF_CTRL_T_OPTS="--preview '(cat {})'"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 . ${HOME}/.z.sh
+
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/gsousa/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gsousa/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/gsousa/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gsousa/google-cloud-sdk/completion.zsh.inc'; fi
