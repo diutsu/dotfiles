@@ -1,13 +1,20 @@
-# Path to your oh-my-zsh installation.
+# Path to your oh-my-zsh installation. 
 export ZSH=$HOME/.oh-my-zsh
 
 export PATH="$PATH:/usr/local/bin:/usr/bin:/bin"
 export PATH="$PATH:/usr/sbin:/sbin"
 export PATH="$PATH:/usr/local/games:/usr/games:$HOME/.local/bin:$HOME/bin"
 
+export GPG_TTY=`tty`
+
 export EDITOR="vim"
 export WORKSPACE="$HOME/workspace"
 export DOTFILES="$HOME/.dotfiles"
+
+# Use login keychain for aws-vault
+export AWS_VAULT_KEYCHAIN_NAME="login"
+# Use long living sessions in aws-vault
+export AWS_SESSION_TTL="12h"
 #export CSRGRAPHS="$HOME/workspace/thesis/graphs-csr/"
 #export GRAPHS="$HOME/workspace/thesis/graphs/"
 #export JAVA_HOME="$PROGRAMS/jdk1.8.0_20"
@@ -17,37 +24,26 @@ export DOTFILES="$HOME/.dotfiles"
 #export MAVEN_OPTS="$JAVA_OPTS -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dmaven.compiler.useIncrementalCompilation=false"
 #export JPDA_TRANSPORT="dt_socket"
 #export JPDA_ADDRESS="8000"
-#qexport PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin
+#export PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin
 
 export PATH=$PATH:$HOME/aws/scripts
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH="$HOME/.jenv/bin:$PATH"
 
-export AWS_SESSION_SURATION="36000"
-eval "$(jenv init -)"
+#export PATH="$HOME/.jenv/bin:$PATH"
+#eval "$(jenv init -)"
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-export DEFAULT_USER="gsousa"
+export DEFAULT_USER="goncalo.sousa"
 ZSH_THEME="diutsu"
 
 
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-dataInfo() {
-    R -q -e "x <- read.csv('$*', sep='\t', header = F); summary(x); apply(x, MARGIN = 2, FUN = sd)"
-}
-
-#alias eclipse='screen -S eclipse $HOME/progs/eclipse/eclipse'
-#alias eclipse-php='screen -S eclipse $HOME/progs/eclipse-php/eclipse'
 source ~/.zsh_alias
 source ~/.zsh_alias_sensitive
-source ~/.zsh_fzf
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -71,8 +67,7 @@ source ~/.zsh_fzf
 # COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
+# under VCS as dirty. This makes repository status check for large repositories # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
@@ -88,13 +83,17 @@ HIST_IGNORE_DUPS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(docker
+plugins=(
+#fzf-tab
+#docker
 git
-mvn
-jira
+#mvn
+gradle
+#jira
 zsh-syntax-highlighting
-zsh-autosuggestions
-kubectl)
+#zsh-autosuggestions
+kubectl
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -123,29 +122,47 @@ bindkey "^[e" end-of-line
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
-eval $(thefuck --alias)
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.zsh_fzf ] && source ~/.zsh_fzf
+
+
 #[ -f /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh
 #[ -f /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh
 
 # Move next only if `homebrew` is installed
-#if command -v brew >/dev/null 2>&1; then
+if command -v brew >/dev/null 2>&1; then
 	# Load rupa's z if installed
-	#[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
-#fi
+	[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
+fi
 
 FZF_CTRL_R_OPTS='--exact'
 FZF_DEFAULT_OPTS='--height 40% --border'
 FZF_CTRL_T_OPTS="--preview '(cat {})'"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-. ${HOME}/.z.sh
+if [ -f /opt/homebrew/etc/profile.d/z.sh ]; then . '/opt/homebrew/etc/profile.d/z.sh'; fi
+if [ -f '${HOME}/.z.sh' ]; then . '${HOME}/.z.sh'; fi
 
 
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/gsousa/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gsousa/google-cloud-sdk/path.zsh.inc'; fi
+#if [ -f '${HOME}/google-cloud-sdk/path.zsh.inc' ]; then . '${HOME}/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/gsousa/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gsousa/google-cloud-sdk/completion.zsh.inc'; fi
+#if [ -f '${HOME}/google-cloud-sdk/completion.zsh.inc' ]; then . '${HOME}/google-cloud-sdk/completion.zsh.inc'; fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# pnpm
+export PNPM_HOME="/Users/goncalo.sousa/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

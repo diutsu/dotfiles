@@ -18,6 +18,22 @@ K=$fg_no_bold[black]
 KB=$fg_bold[black]
 W=$fg_no_bold[white]
 WB=$fg_bold[white]
+
+Rb=$bg_no_bold[red]
+RBb=$bg_bold[red]
+Gb=$bg_no_bold[green]
+GBb=$bg_bold[green]
+Mb=$bg_no_bold[magenta]
+MBb=$bg_bold[magenta]
+Yb=$bg_no_bold[yellow]
+YBb=$bg_bold[yellow]
+Cb=$bg_no_bold[blue]
+CBb=$bg_bold[blue]
+Kb=$bg_no_bold[black]
+KBb=$bg_bold[black]
+Wb=$bg_no_bold[white]
+WBb=$bg_bold[white]
+
 RESET=$reset_color
 
 
@@ -25,6 +41,7 @@ local return_code="%(?..%{$r%}%? ↵%{$reset%})"
 
 local user=`whoami`
 
+SEGMENT_SEPARATOR=$'\ue0b1'
 
 # Get the status of the working tree (copied and modified from git.zsh)
 custom_git_prompt_status() {
@@ -75,11 +92,12 @@ function custom_git_prompt() {
 
 if [ "$user" = "root" ]; then
     PREFIX="%{$R%}#! " CHAR="$";
-    BTYQR="%B%(?.%{$RB%}>%{$MB%}>%{$CB%}> .%{$RB%}>>> )%b%{$RESET%}"
+    BTYQR="%(?.%{$RB%}$SEGMENT_SEPARATOR>%{$MB%}$SEGMENT_SEPARATOR%{$CB%}$SEGMENT_SEPARATOR.%{$RB%}>$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR) %{$RESET%}"
 else
     PREFIX="" CHAR=":";
-    BTYQR="%B%(?.%{$R%}>%{$M%}>%{$C%}> .%{$R%}>>> )%b%{$RESET%}"
+    BTYQR="%(?.%{$R%}$SEGMENT_SEPARATOR%{$M%}$SEGMENT_SEPARATOR%{$C%}$SEGMENT_SEPARATOR%{$RESET%}.%{$R%}$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR) %{$RESET%}"
 fi
+
 T_USER='%{$Y%}'
 if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
   T_USER="$T_USER%n"
@@ -96,7 +114,8 @@ GIT='$(custom_git_prompt) '
 #
 
 # %B sets bold text
-PROMPT="$PREFIX$T_USER$TIME$FOLDER$GIT$BTYQR"
+#PROMPT="$PREFIX$T_USER$TIME$FOLDER$GIT$BTYQR"
+PROMPT="$PREFIX$T_USER$TIME$FOLDER$BTYQR"
 RPS1="${return_code}"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$Y%}"

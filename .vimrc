@@ -13,7 +13,7 @@ Plugin 'VundleVim/Vundle.vim'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
+"Plugin 'tpope/vim-fugitive'
 
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
@@ -23,8 +23,8 @@ Plugin 'martinda/Jenkinsfile-vim-syntax'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
+Plugin 'preservim/nerdcommenter'
+Plugin 'preservim/nerdtree'
 Plugin 'ghewgill/vim-scmdiff'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -35,6 +35,8 @@ Plugin 'tomasr/molokai'
 "Plugin 'chriskempson/base16-vim'
 "Plugin 'dsolstad/vim-wombat256i'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+set rtp+=~/.fzf
+Plugin 'junegunn/fzf.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -101,6 +103,10 @@ set ruler " show line and char pos
 set showmode "show current mode"
 set showcmd "show commands inserted"
 
+
+set clipboard=unnamed
+set mouse=a
+
 " Show me the line numbers relative to actual
 if exists('+relativenumber')
     set relativenumber
@@ -144,7 +150,7 @@ let g:rehash256 = 1
 
 " Vim-airline
 let g:airline_theme = "powerlineish"
-let g:airline_powerline_fonts = 0
+let g:airline_powerline_fonts = 1
 let g:airline_mode_map = {
      \ 'n'  : 'NORMAL',
      \ 'i'  : 'INSERT',
@@ -183,7 +189,3 @@ let @-='i-SNAPSHOT'
 "match OnLength /\%80v./
 
 "au BufWritePost *.tex !pdflatex <afile>
-" some auto expand text
-ab imavc int main(int argc, char**argv) {<CR><CR>return 0;<CR>}<UP><TAB>
-ab psvm public static void main(String[] args) {<CR><CR>}<UP><TAB>
-ab javanewf /**<CR> *<CR>*/<CR><BACKSPACE>{<CR><CR>}<UP><UP><UP><UP><RIGHT>

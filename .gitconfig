@@ -1,7 +1,6 @@
 [user]
-	email = goncalo.sousa@breuninger.de
+	email = email@diutsu.me
 	name = Gonçalo Sousa
-	signingkey = 4FFC08567D29EC7D
 
 [core]
     editor = vim
@@ -23,7 +22,7 @@
     rw = commit --amend
     caa = commit -a --amend -C HEAD
     ch = checkout
-    chb = checkout -
+    back = checkout -
     chm = checkout master
     ci = commit
     cl = clone
@@ -32,10 +31,12 @@
     co = checkout
     copycat = commit --reset-author -C
     cp = cherry-pick
-    d = diff --word-diff
-    dc = diff --cached
     dff = diff --color=auto
+    d = diff --word-diff
     diff = diff --word-diff
+    ds = diff --name-only
+    diffshort = diff --name-only
+    dc = diff --cached --diff-algorithm=minimal -w
     diffc = diff --cached --diff-algorithm=minimal -w
     diffr  = "!f() { git diff "$1"^.."$1"; }; f"
     discard = checkout --
@@ -85,6 +86,7 @@
     r1 = reset HEAD^
     r2 = reset HEAD^^
     real = rebase
+    ric = rebase --continue
     rib = rebase -i master
     rem="!git config -l | grep remote.*url | tail -n +2"
     remotes = remote -v
@@ -113,7 +115,8 @@
     with = merge
     wtf = status
     wtc = !git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
-    yolo = !git add -A && git commit -m \"$(curl -s whatthecommit.com/index.txt)\"
+    yolo = !git add -A && git commit -m \"$(curl -s https://whatthecommit.com/index.txt)\"
+	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
 
 [apply]
     whitespace = nowarn
@@ -136,5 +139,12 @@
 [mergetool "sourcetree"]
 	cmd = meld $LOCAL $MERGED $REMOTE
 	trustExitCode = true
+[commit]
+	gpgsign = true
+[init]
+	templatedir = ~/.git-templates
+[pull]
+	rebase = true
 [gpg]
-	program = gpg
+	program = /usr/bin/gpg
+	program = /usr/local/bin/gpg
