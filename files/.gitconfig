@@ -1,6 +1,7 @@
 [user]
 	email = email@diutsu.me
 	name = Gonçalo Sousa
+	signingkey = /home/diutsu/.ssh/id_ed25519_sig.pub
 
 [core]
     editor = vim
@@ -146,5 +147,6 @@
 [pull]
 	rebase = true
 [gpg]
-	program = /usr/bin/gpg
-	program = /usr/local/bin/gpg
+	format = ssh
+#	program = /usr/bin/gpg
+#	program = /usr/local/bin/gpg

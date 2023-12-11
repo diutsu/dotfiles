@@ -2,7 +2,7 @@
 # Diutsu theme for oh-my-zsh
 # Based on the Sunrised - heavily modified to my preference
 # (Needs Git plugin for current_branch method)
-
+# 
 # Color shortcuts
 R=$fg_no_bold[red]
 RB=$fg_bold[red]

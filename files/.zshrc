@@ -84,14 +84,16 @@ HIST_IGNORE_DUPS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(
-#fzf-tab
-#docker
+aws
+fzf
+fzf-tab
+docker
 git
-#mvn
+mvn
 gradle
+spring
 #jira
 zsh-syntax-highlighting
-#zsh-autosuggestions
 kubectl
 )
 
@@ -166,3 +168,4 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+source /home/diutsu/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
