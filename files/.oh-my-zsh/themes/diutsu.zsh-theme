@@ -2,7 +2,7 @@
 # Diutsu theme for oh-my-zsh
 # Based on the Sunrised - heavily modified to my preference
 # (Needs Git plugin for current_branch method)
-# 
+
 # Color shortcuts
 R=$fg_no_bold[red]
 RB=$fg_bold[red]
@@ -41,7 +41,13 @@ local return_code="%(?..%{$r%}%? ↵%{$reset%})"
 
 local user=`whoami`
 
-SEGMENT_SEPARATOR=$'\ue0b1'
+GRP_SEP=$'\ue0cc'
+END_SEP=$'\ue0b0'
+ERR_SEP=$'\ue0b1'
+IC_GB=$'\ue0a0'
+IC_GC=$'\ue000'
+IC_CL=$'\uf017'
+IC_FD=$'\ue5fe'
 
 # Get the status of the working tree (copied and modified from git.zsh)
 custom_git_prompt_status() {
@@ -87,15 +93,16 @@ custom_git_prompt_status() {
 
 # get the name of the branch we are on (copied and modified from git.zsh)
 function custom_git_prompt() {
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX$(git_current_branch)$(parse_git_dirty)$(git_prompt_behind)$(git_prompt_ahead)$(custom_git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  #echo "$ZSH_THEME_GIT_PROMPT_PREFIX$(git_current_branch)$(parse_git_dirty)$(git_prompt_behind)$(git_prompt_ahead)$(custom_git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$(git_current_branch)"
 }
 
 if [ "$user" = "root" ]; then
     PREFIX="%{$R%}#! " CHAR="$";
-    BTYQR="%(?.%{$RB%}$SEGMENT_SEPARATOR>%{$MB%}$SEGMENT_SEPARATOR%{$CB%}$SEGMENT_SEPARATOR.%{$RB%}>$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR) %{$RESET%}"
+    BTYQR="%(?.%{$RB%}$END_SEP%{$MB%}$END_SEP%{$CB%}$END_SEP.%{$RB%}>$END_SEP$END_SEP$END_SEP)%{$RESET%} "
 else
-    PREFIX="" CHAR=":";
-    BTYQR="%(?.%{$R%}$SEGMENT_SEPARATOR%{$M%}$SEGMENT_SEPARATOR%{$C%}$SEGMENT_SEPARATOR%{$RESET%}.%{$R%}$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR$SEGMENT_SEPARATOR) %{$RESET%}"
+    PREFIX="" CHAR=":"
+    BTYQR="%(?.%{$Y$Rb%}$END_SEP%{$R$Mb%}$END_SEP%{$M$Cb%}$END_SEP%{$C$Kb%}$END_SEP%{$RESET%}.%{$Y$Rb%}$END_SEP%{$KB$Rb%}$ERR_SEP$ERR_SEP%{$R$Kb%}$END_SEP)%{$RESET%} "
 fi
 
 T_USER='%{$Y%}'
@@ -106,19 +113,19 @@ if [[  -n "$SSH_CLIENT" ]]; then
   T_USER="$T_USER@%m"
 fi
 
-FOLDER='%{$C%}%4~ '
 #TIME="[%D{%d/%m %H:%M:%S}]"
-TIME=" %{$M%}%D{%H:%M} "
-GIT='$(custom_git_prompt) '
+TIME="%{$Mb%} $IC_CL %D{%H:%M} %{$M$Cb%}$GRP_SEP "
+FOLDER='%{$K%}$IC_FD %4~ %{$C$Yb%}$GRP_SEP '
+GIT='%{$K%}$IC_GB $(custom_git_prompt) %{$Yb$R%}'
 #BTYQR='%B%(?.$CHAR.%{$R%}$CHAR)%b%{$RESET%}'
 #
 
 # %B sets bold text
-#PROMPT="$PREFIX$T_USER$TIME$FOLDER$GIT$BTYQR"
-PROMPT="$PREFIX$T_USER$TIME$FOLDER$BTYQR"
+PROMPT="$PREFIX$T_USER%{$RESET%}%{$K%}$TIME$FOLDER$GIT$BTYQR"
+#PROMPT="$PREFIX$T_USER$TIME$FOLDER$BTYQR"
 RPS1="${return_code}"
 
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$Y%}"
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$K$Yb%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$RESET%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$R%}*"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
