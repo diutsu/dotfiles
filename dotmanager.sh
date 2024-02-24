@@ -23,7 +23,7 @@
 #   -D <file>: Diff mode. Print the difference with the specified file.
 #
 
-src_dir="${DOTFILES:-./files}"
+src_dir="${DOTFILES:-.}/files"
 dest_dir="$HOME"
 
 print_help() {
@@ -84,10 +84,11 @@ if [[ ! -d "$dest_dir" ]]; then
 fi
 
 # Create a list of excluded files
-excluded_files=("dotmanager.sh" "README.md" "LICENSE")
+excluded_files=("dotmanager.sh" "README.md" "LICENSE" ".git")
 
 # Find managed files excluding excluded files
-managed_files=($(find "$src_dir" -type f ! -name "${excluded_files[1]}" ! -name "${excluded_files[2]}" ! -name "${excluded_files[3]}"))
+echo $src_dir
+managed_files=($(find "$src_dir" -type f ! -name "${excluded_files[1]}" ! -name "${excluded_files[2]}" ! -name "${excluded_files[3]}" ! -name "${excluded_files[4]}"))
 
 if [[ "$mode" == "add" ]]; then
     # Check if a new file is provided
@@ -152,7 +153,7 @@ for file in "${managed_files[@]}"; do
     dest_file="$dest_dir/$file_name"
 
     if [[ "$mode" == "install" ]]; then
-        if [ -e "$dest_file" ]; then
+	    if [ -e "$dest_file" ]; then
             if diff -r "$file" "$dest_file" > /dev/null; then
                 echo "No change between $file and $dest_file"
             else
@@ -160,7 +161,7 @@ for file in "${managed_files[@]}"; do
                 echo "Updated $file with $dest_file"
             fi
         else
-            cp -r a"$file" "$dest_dir"
+            cp -r "$file" "$dest_dir"
             echo "Created: $dest_file"
         fi
     elif [[ "$mode" == "update" ]]; then

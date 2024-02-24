@@ -9,7 +9,7 @@ export GPG_TTY=`tty`
 
 export EDITOR="vim"
 export WORKSPACE="$HOME/workspace"
-export DOTFILES="$HOME/.dotfiles"
+export DOTFILES="$HOME/dotfiles"
 
 # Use login keychain for aws-vault
 export AWS_VAULT_KEYCHAIN_NAME="login"
