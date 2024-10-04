@@ -23,6 +23,7 @@ Plugin 'martinda/Jenkinsfile-vim-syntax'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'tpope/vim-fugitive'
 Plugin 'preservim/nerdcommenter'
 Plugin 'preservim/nerdtree'
 Plugin 'ghewgill/vim-scmdiff'

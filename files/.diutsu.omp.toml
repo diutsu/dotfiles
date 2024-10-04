@@ -1,0 +1,261 @@
+version = 2
+final_space = true
+console_title_template = '{{ .UserName }} :: {{ .Folder }}'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = "upgrade"
+    style = "plain"
+    foreground = "#111111"
+    background = "#FFD664"
+  [[blocks.segments]]
+    type = 'session'
+    style = 'diamond'
+    leading_diamond = ''
+    trailing_diamond = ''
+    template = ' {{ if .SSHSession }} {{ end }}{{ .UserName }} '
+    background = 'lightGreen'
+    foreground = 'black'
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'diamond'
+    leading_diamond = ''
+    trailing_diamond = ''
+    template = '  {{ path .Path .Location }} '
+    background = 'blue'
+    foreground = 'lightWhite'
+
+    [blocks.segments.properties]
+      style = 'agnoster_short'
+      hide_root_location = false
+      max_depth = 5
+      mapped_locations_enabled = true
+      mapped_locations = { '~/workspace/*' = '󰹕' , 'src/main/kotlin' = ''  }
+
+  [[blocks.segments]]
+    type = 'git'
+    style = 'diamond'
+    leading_diamond = ''
+    trailing_diamond = ''
+    background_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}red{{ end }}']
+    template = ' {{ url .HEAD .UpstreamURL }} ' 
+    # template = ' {{ if .UpstreamURL }}{{ url .UpstreamIcon .UpstreamURL }} {{ end }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} '
+    background = 'yellow'
+    foreground = 'black'
+
+    [blocks.segments.properties]
+      branch_max_length = 25
+      fetch_status = false
+      fetch_upstream_icon = true
+
+  [[blocks.segments]]
+    type = 'root'
+    style = 'powerline'
+    powerline_symbol = ''
+    template = '  '
+    background = 'yellow'
+    foreground = 'black'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'right'
+  #nnewline = true
+
+  [[blocks.segments]]
+    type = 'node'
+    style = 'plain'
+    template = ' {{ .Full }} '
+    background = 'transparent'
+    foreground = 'lightWhite'
+
+    [blocks.segments.properties]
+      fetch_package_manager = false
+      home_enabled = false
+
+  [[blocks.segments]]
+    type = 'go'
+    style = 'plain'
+    template = ' '
+    background = 'transparent'
+    foreground = 'lightWhite'
+
+    [blocks.segments.properties]
+    alignment = 'left'
+      fetch_version = false
+
+  [[blocks.segments]]
+    type = "kotlin"
+    style = "plain"
+    background = 'transparent'
+    foreground = 'lightWhite'
+    template = "<b>K</b> {{ .Full }} "
+
+
+  [[blocks.segments]]
+    type = "php"
+    style = "plain"
+    background = 'transparent'
+    foreground = 'lightWhite'
+    template = "<b></b> {{ .Full }}"
+
+  [[blocks.segments]]
+    type = 'python'
+    style = 'plain'
+    template = ' '
+    background = 'transparent'
+    foreground = 'lightWhite'
+
+    [blocks.segments.properties]
+      display_mode = 'files'
+      fetch_version = false
+      fetch_virtual_env = false
+
+  [[blocks.segments]] 
+    type = "status"
+    style = "diamond"
+    leading_diamond = ''
+    trailing_diamond = ''
+    foreground = 'black'
+    background = 'lightGreen'
+    background_templates = [ "{{ if .Error }}red{{ end }}" ]
+    template = "{{ .String }}"
+    [blocks.segments.properties]
+      always_enabled = true
+      status_template = '{{ if eq .Code 0 }}{{ else }} {{ .Code }} : {{ reason .Code }} {{end}}'
+  
+  [[blocks.segments]]
+    type = 'time'
+    style = 'diamond'
+    leading_diamond = ''
+    trailing_diamond = ''
+    background = 'blue'
+    foreground = 'black'
+
+  [[blocks.segments]]
+    type = "executiontime"
+    style = 'diamond'
+    leading_diamond = ''
+    trailing_diamond = ''
+    foreground = "black"
+    background = "lightWhite"
+    template = "  {{ .FormattedMs }} "
+
+    [properties]
+        threshold = 100
+        style = "austin"
+        always_enabled = true
+
+[[blocks]]
+  type = "prompt"
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = "text"
+    style = "plain"
+    foreground = "magenta"
+    template = ""
+
+[[tooltips]]
+  type = 'aws'
+  tips = ['aws']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  template = '  {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} '
+  background = 'yellow'
+  foreground = 'black'
+
+  [tooltips.properties]
+    display_default = true
+
+[[tooltips]]
+  type = 'git'
+  tips = ['g','git']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  background = 'green'
+  foreground = 'black'
+  background_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}p:red{{ end }}']
+  foregroud_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}p:white{{ end }}']
+  template = ' {{ url .UpstreamIcon .UpstreamURL }} {{ .HEAD }} {{ .BranchStatus }}  {{ .Working.String }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} '
+
+  [tooltips.properties]
+    fetch_status = true
+    fetch_upstream_icon = true
+[[tooltips]]
+  type = 'pnpm'
+  tips = ['pnpm']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  template = "󰋁 {{ .Full }} "
+  background = 'blue'
+  foreground = 'black'
+[[tooltips]]
+  type = 'npm'
+  tips = ['npm','pnpm']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  template = " {{ .Full }} "
+  background = 'blue'
+  foreground = 'black'
+[[tooltips]]
+  type = 'nx'
+  tips = ['nx']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  template = "  {{ .Full }} "
+  background = 'blue'
+  foreground = 'black'
+
+[[tooltips]]
+  type = 'kubectl'
+  tips = ['kubectl','kube']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  template = " 󱃾 {{.Context}}{{if .Namespace}} 󰌕 {{.Namespace}}{{end}} "
+  background = 'magenta'
+  foreground = 'black'
+
+[[tooltips]]
+  type = 'az'
+  tips = ['az']
+  style = 'diamond'
+  leading_diamond = ''
+  trailing_diamond = ''
+  template = '  {{ .Name }} '
+  background = 'blue'
+  foreground = 'white'
+
+  [tooltips.properties]
+    display_default = true
+
+[transient_prompt]
+  template = '{{if .Root}}<,red> root @</>{{end}}<lightWhite,lightMagenta>{{ .PWD }} </><lightMagenta,transparent></> '
+  background = 'transparent'
+  foreground = 'black'
+  newline = true
+
+[secondary_prompt]
+  template = '>>> '
+  background = 'transparent'
+  foreground = 'red'
+
+[palette]
+  black = '#262B44'
+  blue = '#4B95E9'
+  green = '#59C9A5'
+  orange = '#F07623'
+  red = '#D81E5B'
+  white = '#E0DEF4'
+  yellow = '#F3AE35'

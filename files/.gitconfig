@@ -1,11 +1,12 @@
 [user]
-	email = email@diutsu.me
+    email = goncalo.sousa@personio.de
 	name = Gonçalo Sousa
-	signingkey = /home/diutsu/.ssh/id_ed25519_sig.pub
+	signingkey = /Users/goncalo.sousa/.ssh/id_ed25519.pub
 
 [core]
     editor = vim
     autocrlf = input
+	excludesfile = /Users/goncalo.sousa/.gitexclude
 
 [alias]
     ai = add --interactive
@@ -150,3 +151,5 @@
 	format = ssh
 #	program = /usr/bin/gpg
 #	program = /usr/local/bin/gpg
+[url "ssh://git@gitlab.personio-internal.de/"]
+	insteadOf = https://gitlab.personio-internal.de/

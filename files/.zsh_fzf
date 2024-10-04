@@ -64,7 +64,7 @@ fcs() {
 alias fsearch="ag --nobreak --nonumbers --noheading . | fzf"
 
 fzfo(){
-    $EDITOR $(fzf  --preview 'head -100 {}' --height 40% --preview-window down:1)
+    $EDITOR $(fzf -m --preview 'head -100 {}' --height 40% --preview-window "up:3:border-bold" --layout "reverse" --border "none")
 }
 
 fview(){

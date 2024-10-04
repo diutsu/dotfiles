@@ -1,6 +1,8 @@
 # Path to your oh-my-zsh installation. 
+
 export ZSH=$HOME/.oh-my-zsh
 
+export PATH="$PATH:$(brew --prefix python)/libexec/bin"
 export PATH="$PATH:/usr/local/bin:/usr/bin:/bin"
 export PATH="$PATH:/usr/sbin:/sbin"
 export PATH="$PATH:/usr/local/games:/usr/games:$HOME/.local/bin:$HOME/bin"
@@ -9,7 +11,8 @@ export GPG_TTY=`tty`
 
 export EDITOR="vim"
 export WORKSPACE="$HOME/workspace"
-export DOTFILES="$HOME/dotfiles"
+export DOTFILES="$HOME/.dotfiles"
+
 
 # Use login keychain for aws-vault
 export AWS_VAULT_KEYCHAIN_NAME="login"
@@ -30,20 +33,19 @@ export PATH=$PATH:$HOME/aws/scripts
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
-#export PATH="$HOME/.jenv/bin:$PATH"
-#eval "$(jenv init -)"
-
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 export DEFAULT_USER="goncalo.sousa"
-ZSH_THEME="diutsu"
+# custom oh-my-zsh teheme
+# ZSH_THEME="diutsu"
 
+# export FZF_BASE="/opt/Homebrew/opt/fzf"
 
-# Example aliases
-source ~/.zsh_alias
-source ~/.zsh_alias_sensitive
+# Load  aliases
+source ~/.zsh_alias # under VCS
+source ~/.zsh_alias_sensitive # local-only
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -77,27 +79,48 @@ source ~/.zsh_alias_sensitive
 hist_ignore_dups="true"
 HIST_FIND_NO_DUPS="true"
 HIST_IGNORE_DUPS="true"
+
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
+
+export FZF_CTRL_R_OPTS='--exact'
+export FZF_DEFAULT_OPTS='--height 40% --border "bold" --prompt=" " --marker="" --pointer=""'
+export FZF_CTRL_T_OPTS="--preview '(cat {})'"
+ 
+
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(
-aws
-fzf
-fzf-tab
-docker
-git
-mvn
-gradle
-spring
-#jira
-zsh-syntax-highlighting
-kubectl
+    fzf-tab
+    zsh-autosuggestions
+    fzf
+    aws
+    docker
+    git
+    mvn
+    gradle
+    spring
+    zsh-syntax-highlighting
+    kubectl
 )
 
+#fzf-tab
+#
+## disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+
 source $ZSH/oh-my-zsh.sh
+# source $HOME/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # User configuration
 
@@ -106,57 +129,26 @@ bindkey "[C" forward-word
 bindkey "^[a" beginning-of-line
 bindkey "^[e" end-of-line
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.zsh_fzf ] && source ~/.zsh_fzf
-
-
-#[ -f /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/key-bindings.zsh
-#[ -f /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh ] && /usr/local/Cellar/fzf/0.17.1/shell/completion.zsh
-
 # Move next only if `homebrew` is installed
 if command -v brew >/dev/null 2>&1; then
 	# Load rupa's z if installed
 	[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
 fi
 
-FZF_CTRL_R_OPTS='--exact'
-FZF_DEFAULT_OPTS='--height 40% --border'
-FZF_CTRL_T_OPTS="--preview '(cat {})'"
+# if [ -f '${HOME}/.z.sh' ]; then . '${HOME}/.z.sh'; fi
+source <(fzf --zsh)
+[ -f ~/.zsh_fzf ] && source ~/.zsh_fzf
+
+
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-if [ -f /opt/homebrew/etc/profile.d/z.sh ]; then . '/opt/homebrew/etc/profile.d/z.sh'; fi
-if [ -f '${HOME}/.z.sh' ]; then . '${HOME}/.z.sh'; fi
 
-
-
-# The next line updates PATH for the Google Cloud SDK.
-#if [ -f '${HOME}/google-cloud-sdk/path.zsh.inc' ]; then . '${HOME}/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-#if [ -f '${HOME}/google-cloud-sdk/completion.zsh.inc' ]; then . '${HOME}/google-cloud-sdk/completion.zsh.inc'; fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# export SDKMAN_DIR="$HOME/.sdkman"
+# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+# nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -168,4 +160,10 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-source /home/diutsu/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+export PATH="/usr/local/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
+
+eval "$(oh-my-posh init zsh --config ~/.diutsu.omp.toml)"
+
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
