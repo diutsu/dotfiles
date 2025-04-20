@@ -1,8 +1,9 @@
-# Path to your oh-my-zsh installation. 
+# Optionally set lightweight mode to disable costly stuff
+mode="light"
 
+# Path to your oh-my-zsh installation. 
 export ZSH=$HOME/.oh-my-zsh
 
-export PATH="$PATH:$(brew --prefix python)/libexec/bin"
 export PATH="$PATH:/usr/local/bin:/usr/bin:/bin"
 export PATH="$PATH:/usr/sbin:/sbin"
 export PATH="$PATH:/usr/local/games:/usr/games:$HOME/.local/bin:$HOME/bin"
@@ -39,9 +40,7 @@ export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/b
 # time that oh-my-zsh is loaded.
 export DEFAULT_USER="goncalo.sousa"
 # custom oh-my-zsh teheme
-# ZSH_THEME="diutsu"
-
-# export FZF_BASE="/opt/Homebrew/opt/fzf"
+ZSH_THEME="diutsu"
 
 # Load  aliases
 source ~/.zsh_alias # under VCS
@@ -93,19 +92,30 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(
-    fzf-tab
-    zsh-autosuggestions
-    fzf
-    aws
-    docker
-    git
-    mvn
-    gradle
-    spring
-    zsh-syntax-highlighting
-    kubectl
-)
+
+if [[ "${mode}" != 'light' ]] 
+then
+    plugins=(
+        fzf-tab
+        zsh-autosuggestions
+        fzf
+        aws
+        docker
+        git
+        mvn
+        gradle
+        spring
+        zsh-syntax-highlighting
+        kubectl
+    )
+else 
+    plugins=(
+        fzf
+        fzf-tab
+        git
+        mvn
+    )
+fi
 
 #fzf-tab
 #
@@ -131,22 +141,35 @@ bindkey "^[e" end-of-line
 
 # Move next only if `homebrew` is installed
 if command -v brew >/dev/null 2>&1; then
+    export PATH="$PATH:$(brew --prefix python)/libexec/bin"
+    export PATH="$PATH:$(brew --prefix)/bin"
+    export PATH="$PATH:$(brew --prefix)/opt/fzf"
 	# Load rupa's z if installed
 	[ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
+    [ -f $(brew --prefix)/opt/asdf/libexec/asdf.sh ] && . /opt/homebrew/opt/asdf/libexec/asdf.sh
 fi
 
 # if [ -f '${HOME}/.z.sh' ]; then . '${HOME}/.z.sh'; fi
-source <(fzf --zsh)
-[ -f ~/.zsh_fzf ] && source ~/.zsh_fzf
-
+ if command -v fzf &>/dev/null; then
+  # Don't source FZF shell integrations if version is older than 0.48 (Avoids `unknown option: --bash`)
+  # Version comparison technique courtesy of Luciano Andress Martini:
+  # https://unix.stackexchange.com/questions/285924/how-to-compare-a-programs-version-in-a-shell-script
+  FZF_VERSION="$(fzf --version | cut -d' ' -f1)"
+  if [[ "$FZF_VERSION" != "0.38.0" ]]; then
+    source <(fzf --zsh)
+  fi
+  [ -f ~/.zsh_fzf ] && source ~/.zsh_fzf
+fi
 
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+if [ -f '${HOME}/.z.sh' ]; then . '${HOME}/.z.sh'; fi
+
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-# export SDKMAN_DIR="$HOME/.sdkman"
-# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -154,16 +177,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # pnpm
-export PNPM_HOME="/Users/goncalo.sousa/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+#export PNPM_HOME="/Users/goncalo.sousa/Library/pnpm"
+#case ":$PATH:" in
+  #*":$PNPM_HOME:"*) ;;
+  #*) export PATH="$PNPM_HOME:$PATH" ;;
+#esac
 # pnpm end
 
 export PATH="/usr/local/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
 
-eval "$(oh-my-posh init zsh --config ~/.diutsu.omp.toml)"
-
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+# eval "$(oh-my-posh init zsh --config ~/.diutsu.omp.toml)"

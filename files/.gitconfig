@@ -1,5 +1,5 @@
 [user]
-    email = goncalo.sousa@personio.de
+    email = $GIT_EMAIL
 	name = Gonçalo Sousa
 	signingkey = /Users/goncalo.sousa/.ssh/id_ed25519.pub
 
@@ -135,14 +135,14 @@
 	default = simple
 [help]
     autocorrect = 1
-[difftool "sourcetree"]
+[difftool]
 	cmd = meld $LOCAL $BASE
 	path = 
-[mergetool "sourcetree"]
+[mergetool]
 	cmd = meld $LOCAL $MERGED $REMOTE
 	trustExitCode = true
-[commit]
-	gpgsign = true
+;[commit]
+	;gpgsign = true
 [init]
 	templatedir = ~/.git-templates
 [pull]

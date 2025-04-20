@@ -1,46 +1,37 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-"Plugin 'tpope/vim-fugitive'
-
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'martinda/Jenkinsfile-vim-syntax'
+call plug#begin('~/.vim/plugged')
+Plug 'git://git.wincent.com/command-t.git'
+Plug 'martinda/Jenkinsfile-vim-syntax'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'tpope/vim-fugitive'
-Plugin 'preservim/nerdcommenter'
-Plugin 'preservim/nerdtree'
-Plugin 'ghewgill/vim-scmdiff'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-surround'
-Plugin 'tomasr/molokai'
+Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plug 'preservim/nerdcommenter'
+Plug 'preservim/nerdtree'
+Plug 'ghewgill/vim-scmdiff'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-surround'
+Plug 'tomasr/molokai'
 "Plugin 'altercation/vim-colors-solarized'
 "Plugin 'chriskempson/base16-vim'
 "Plugin 'dsolstad/vim-wombat256i'
-Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 set rtp+=~/.fzf
-Plugin 'junegunn/fzf.vim'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
+call plug#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
@@ -108,12 +99,14 @@ set showcmd "show commands inserted"
 set clipboard=unnamed
 set mouse=a
 
-" Show me the line numbers relative to actual
-if exists('+relativenumber')
-    set relativenumber
-    au FocusLost * :set number
-    au FocusGained * :set relativenumber
-endif
+" toggle numbers to absolute on insert mode"
+set number
+
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
+  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
+augroup END
 
 set autochdir "change to current directory"
 
@@ -161,12 +154,6 @@ let g:airline_mode_map = {
      \ }
 
 let g:go_fmt_command = "goimports"
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-"let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['java','c'],'passive_filetypes': [] }
-
 
 let @-='i-SNAPSHOT'
 
