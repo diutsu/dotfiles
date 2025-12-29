@@ -174,21 +174,21 @@ console_title_template = '{{ .UserName }} :: {{ .Folder }}'
   [tooltips.properties]
     display_default = true
 
-[[tooltips]]
-  type = 'git'
-  tips = ['g','git']
-  style = 'diamond'
-  leading_diamond = ''
-  trailing_diamond = ''
-  background = 'green'
-  foreground = 'black'
-  background_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}p:red{{ end }}']
-  foregroud_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}p:white{{ end }}']
-  template = ' {{ url .UpstreamIcon .UpstreamURL }} {{ .HEAD }} {{ .BranchStatus }}  {{ .Working.String }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} '
+#[[tooltips]]
+  #type = 'git'
+  #tips = ['g','git']
+  #style = 'diamond'
+  #leading_diamond = ''
+  #trailing_diamond = ''
+  #background = 'green'
+  #foreground = 'black'
+  #background_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}p:red{{ end }}']
+  #foregroud_templates = ['{{ if or ( .Rebase) ( .CherryPick ) (.Merge) }}p:white{{ end }}']
+  #template = ' {{ url .UpstreamIcon .UpstreamURL }} {{ .HEAD }} {{ .BranchStatus }}  {{ .Working.String }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} '
 
-  [tooltips.properties]
-    fetch_status = true
-    fetch_upstream_icon = true
+  #[tooltips.properties]
+    #fetch_status = true
+    #fetch_upstream_icon = true
 [[tooltips]]
   type = 'pnpm'
   tips = ['pnpm']
