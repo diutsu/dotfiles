@@ -157,11 +157,13 @@ for file in "${managed_files[@]}"; do
             if diff -r "$file" "$dest_file" > /dev/null; then
                 echo "No change between $file and $dest_file"
             else
-                cp -r "$file" "$dest_dir"
+                mkdir -p "$(dirname "$dest_file")"
+                cp -r "$file" "$dest_file"
                 echo "Updated $file with $dest_file"
             fi
         else
-            cp -r "$file" "$dest_dir"
+            mkdir -p "$(dirname "$dest_file")"
+            cp -r "$file" "$dest_file"
             echo "Created: $dest_file"
         fi
     elif [[ "$mode" == "update" ]]; then

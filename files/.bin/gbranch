@@ -1,0 +1,52 @@
+#!/bin/zsh
+
+local delete=false
+local pull_master=true
+
+echo "GBranch - Deleting stale branches"
+
+# Parse flags
+while getopts "dl" opt; do
+case $opt in
+  d) delete=true ;;
+  l) pull_master=false ;;
+  *) echo "Usage: gbranch [-d] [-l]"; return 1 ;;
+esac
+done
+
+# Determine default branch (main or master)
+local default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+if [ -z "$default_branch" ]; then
+echo "Could not determine default branch (main/master)."
+return 1
+fi
+
+# Optionally update default branch
+if $pull_master; then
+git checkout "$default_branch" && git pull --ff-only || {
+  echo "Failed to update $default_branch"
+  return 1
+}
+fi
+
+local now=$(date +%s)
+
+echo "Deleting branches older than $now" 
+
+for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
+if [ "$branch" = "$default_branch" ]; then continue; fi
+
+if ! git merge-base --is-ancestor "$branch" "$default_branch"; then
+  commit_date=$(git log -1 --format=%ct "$branch")
+  age=$(( (now - commit_date) / 86400 ))
+  if [ "$age" -gt 30 ]; then
+    if $delete; then
+      echo "Deleting $branch (last updated $age days ago)"
+      git branch -D "$branch"
+    else
+      echo "$branch (last updated $age days ago)"
+    fi
+  fi
+fi
+done
+

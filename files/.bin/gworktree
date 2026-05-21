@@ -1,0 +1,272 @@
+#!/usr/bin/env zsh
+# List git worktrees under the current repo and flag which ones are safe to remove.
+# Usage: gworktree [--remove] [-i]
+# Deps: git, fzf (optional, for -i)
+#
+# A worktree is safe to remove when ALL of:
+#   - it is not the main worktree
+#   - it has a clean working tree (no staged/unstaged/untracked changes)
+#   - it has no unpushed commits unique to its branch
+#   - AND either:
+#       * its branch is fully merged into the default branch, OR
+#       * its upstream remote branch no longer exists (PR merged + branch deleted), OR
+#       * git itself marks it prunable (gone worktree dir)
+
+set -u
+
+remove=false
+interactive=false
+remove_args=()
+collecting_remove=false
+for arg in "$@"; do
+  case "$arg" in
+    --remove) remove=true; collecting_remove=true ;;
+    -i|--interactive) interactive=true; remove=true; collecting_remove=false ;;
+    -h|--help) echo "Usage: gworktree [-i] [--remove <path>...]"; exit 0 ;;
+    -*) echo "Unknown argument: $arg" >&2; echo "Usage: gworktree [-i] [--remove <path>...]" >&2; exit 1 ;;
+    *)
+      if $collecting_remove; then
+        remove_args+=("$arg")
+      else
+        echo "Unexpected positional argument: $arg" >&2; exit 1
+      fi
+      ;;
+  esac
+done
+
+git rev-parse --git-dir >/dev/null 2>&1 || { echo "Not in a git repo." >&2; exit 1; }
+
+root=$(git rev-parse --show-toplevel)
+main_wt=$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')
+default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+[ -z "$default_branch" ] && default_branch="main"
+
+echo "Refreshing remote refs..."
+git fetch --prune origin >/dev/null 2>&1 || echo "Warning: git fetch failed; remote state may be stale." >&2
+
+removable=()
+kept=()
+
+# Parse worktrees into parallel arrays via porcelain output.
+current_path=""
+current_branch=""
+current_head=""
+current_detached=false
+current_prunable=false
+
+flush() {
+  [ -z "$current_path" ] && return
+  # Never list or act on the main worktree (project root).
+  if [ "$current_path" = "$main_wt" ] || [ "$current_path" = "$root" ]; then
+    return
+  fi
+
+  local branch="$current_branch"
+  local reasons=()
+  local ok=true
+
+  if $current_prunable; then
+    removable+=("$current_path|prunable (directory gone)")
+    return
+  fi
+
+  if [ ! -d "$current_path" ]; then
+    removable+=("$current_path|directory missing")
+    return
+  fi
+
+  # Dirty check
+  if [ -n "$(git -C "$current_path" status --porcelain 2>/dev/null)" ]; then
+    reasons+=("dirty working tree")
+    ok=false
+  fi
+
+  if $current_detached; then
+    reasons+=("detached HEAD")
+    ok=false
+  elif [ -n "$branch" ]; then
+    # Unpushed commits on upstream?
+    local upstream
+    upstream=$(git -C "$current_path" rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>/dev/null || true)
+    if [ -n "$upstream" ]; then
+      local ahead
+      ahead=$(git -C "$current_path" rev-list --count "$upstream..HEAD" 2>/dev/null || echo 0)
+      if [ "$ahead" -gt 0 ]; then
+        reasons+=("$ahead unpushed commit(s)")
+        ok=false
+      fi
+    fi
+
+    # Merged-into-default check
+    local merged=false
+    if git merge-base --is-ancestor "$branch" "origin/$default_branch" 2>/dev/null; then
+      merged=true
+    fi
+
+    # Remote branch gone?
+    local remote_gone=false
+    if [ -n "$upstream" ]; then
+      if ! git show-ref --verify --quiet "refs/remotes/$upstream"; then
+        remote_gone=true
+      fi
+    fi
+
+    if ! $merged && ! $remote_gone; then
+      reasons+=("branch not merged into $default_branch and remote still exists")
+      ok=false
+    fi
+
+    if $merged; then reasons+=("merged into $default_branch"); fi
+    if $remote_gone; then reasons+=("remote branch gone"); fi
+  fi
+
+  if $ok; then
+    removable+=("$current_path|${(j:, :)reasons}")
+  else
+    kept+=("$current_path|${(j:, :)reasons}")
+  fi
+}
+
+while IFS= read -r line; do
+  case "$line" in
+    "worktree "*)
+      flush
+      current_path="${line#worktree }"
+      current_branch=""
+      current_head=""
+      current_detached=false
+      current_prunable=false
+      ;;
+    "HEAD "*) current_head="${line#HEAD }" ;;
+    "branch "*) current_branch="${${line#branch }#refs/heads/}" ;;
+    "detached") current_detached=true ;;
+    "prunable"*) current_prunable=true ;;
+    "") ;;
+  esac
+done < <(git worktree list --porcelain)
+flush
+
+echo ""
+echo "Worktrees under $root"
+echo ""
+echo "Removable:"
+if [ ${#removable[@]} -eq 0 ]; then
+  echo "  (none)"
+else
+  for entry in "${removable[@]}"; do
+    echo "  ${entry%%|*} — ${entry#*|}"
+  done
+fi
+
+echo ""
+echo "Keep:"
+if [ ${#kept[@]} -eq 0 ]; then
+  echo "  (none)"
+else
+  for entry in "${kept[@]}"; do
+    echo "  ${entry%%|*} — ${entry#*|}"
+  done
+fi
+
+resolve_worktree_path() {
+  local input="$1"
+  # Absolute path match first.
+  for entry in "${removable[@]}" "${kept[@]}"; do
+    local p="${entry%%|*}"
+    if [ "$p" = "$input" ]; then echo "$p"; return 0; fi
+  done
+  # Relative to PWD.
+  local abs
+  abs=$(cd "$input" 2>/dev/null && pwd) || abs=""
+  if [ -n "$abs" ]; then
+    for entry in "${removable[@]}" "${kept[@]}"; do
+      local p="${entry%%|*}"
+      if [ "$p" = "$abs" ]; then echo "$p"; return 0; fi
+    done
+  fi
+  # Basename / suffix match.
+  for entry in "${removable[@]}" "${kept[@]}"; do
+    local p="${entry%%|*}"
+    if [[ "$p" == *"/$input" ]] || [ "${p:t}" = "$input" ]; then echo "$p"; return 0; fi
+  done
+  return 1
+}
+
+if $remove; then
+  selected=()
+
+  if [ ${#remove_args[@]} -gt 0 ]; then
+    for arg in "${remove_args[@]}"; do
+      abs=$(cd "$arg" 2>/dev/null && pwd) || abs=""
+      if [ "$arg" = "$main_wt" ] || [ "$arg" = "$root" ] || [ "$abs" = "$main_wt" ] || [ "$abs" = "$root" ]; then
+        echo "Refusing to remove main worktree: $arg" >&2
+        continue
+      fi
+      if resolved=$(resolve_worktree_path "$arg"); then
+        if [ "$resolved" = "$main_wt" ] || [ "$resolved" = "$root" ]; then
+          echo "Refusing to remove main worktree: $resolved" >&2
+          continue
+        fi
+        selected+=("$resolved")
+      else
+        echo "No matching worktree for: $arg" >&2
+      fi
+    done
+  elif $interactive; then
+    if [ ${#removable[@]} -eq 0 ] && [ ${#kept[@]} -eq 0 ]; then
+      echo ""
+      echo "No worktrees."
+      exit 0
+    fi
+    if command -v fzf >/dev/null 2>&1; then
+      echo ""
+      echo "Select worktrees to remove (Tab to multi-select, Enter to confirm, Esc to cancel)."
+      echo "REMOVABLE rows are safe; KEEP rows are unsafe but still selectable."
+      {
+        for entry in "${removable[@]}"; do
+          printf 'REMOVABLE\t%s\t%s\n' "${entry%%|*}" "${entry#*|}"
+        done
+        for entry in "${kept[@]}"; do
+          printf 'KEEP     \t%s\t%s\n' "${entry%%|*}" "${entry#*|}"
+        done
+      } > /tmp/gworktree.$$.list
+      picked=$(fzf --multi --no-sort --height=60% --reverse \
+                   --delimiter=$'\t' --with-nth=1,2,3 \
+                   --header="status │ path │ reason" \
+                   --prompt="remove > " < /tmp/gworktree.$$.list)
+      rm -f /tmp/gworktree.$$.list
+      if [ -z "$picked" ]; then
+        echo "Nothing selected."
+        exit 0
+      fi
+      while IFS=$'\t' read -r _status wt _reason; do
+        selected+=("$wt")
+      done <<< "$picked"
+    else
+      echo ""
+      echo "fzf not found — falling back to per-entry prompt."
+      for entry in "${removable[@]}"; do
+        wt="${entry%%|*}"
+        printf "Remove %s? [y/N] " "$wt"
+        read -r answer
+        case "$answer" in y|Y|yes) selected+=("$wt") ;; esac
+      done
+    fi
+  else
+    echo "--remove requires one or more worktree paths, or pass -i to pick interactively." >&2
+    exit 1
+  fi
+
+  if [ ${#selected[@]} -eq 0 ]; then
+    echo "Nothing to remove."
+    exit 0
+  fi
+
+  echo ""
+  echo "Removing ${#selected[@]} worktree(s)..."
+  for wt in "${selected[@]}"; do
+    echo "  - $wt"
+    git worktree remove --force "$wt" 2>&1 || echo "    (failed)" >&2
+  done
+  git worktree prune
+fi
